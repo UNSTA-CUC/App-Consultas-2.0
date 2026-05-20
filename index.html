@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Consultas CUC</title>
+    <style>
+        /* RESETEO BÁSICO */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body, html { 
+            height: 100%; width: 100%; 
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            overflow-y: auto;
+            background-color: #001f4d;
+        }
+
+        /* FONDO GENERAL CON IMAGEN UNIFICADA */
+        .pantalla {
+            display: none; 
+            min-height: 100vh; 
+            width: 100%;
+            background-image: linear-gradient(rgba(0, 25, 61, 0.55), rgba(0, 10, 30, 0.75)), url('./fondo.jpg');
+            background-size: cover; 
+            background-position: center;
+            background-attachment: fixed;
+            padding: 20px 0;
+        }
+
+        /* Pantalla activa por defecto (Registro) */
+        .activa { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+        /* CONTENEDOR DE LOGO SUPERIOR */
+        .logo-contenedor {
+            width: 90%; max-width: 420px;
+            text-align: center; margin-bottom: 15px;
+        }
+        
+        .logo-universidad {
+            max-width: 80%; height: auto;
+            filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.5));
+        }
+
+        /* CONTENEDOR DE TEXTO / FORMULARIO - EFECTO LIQUID GLASS */
+        .contenedor-v2 {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.45));
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 30px; 
+            border-radius: 24px; 
+            text-align: center;
+            width: 90%; 
+            max-width: 420px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 
+                        inset 0 2px 4px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Color blanco/brillante para el título sobre el vidrio líquido */
+        h2 { color: #002266; margin-bottom: 20px; font-weight: 700; font-size: 1.5rem; text-shadow: 0 1px 1px rgba(255,255,255,0.5); }
+        
+        input, select {
+            width: 100%; padding: 15px; margin: 10px 0;
+            font-size: 16px; border-radius: 12px;
+            border: 1px solid rgba(0, 51, 153, 0.2); 
+            background: rgba(255, 255, 255, 0.9);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus { border-color: #003399; box-shadow: 0 0 10px rgba(0,51,153,0.2); }
+
+        /* BOTONES ESTILO LIQUID GLASS CON TEXTO AZUL */
+        .btn-interactivo {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.3));
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: #003399; /* COLOR DE TEXTO AZUL */
+            padding: 16px; 
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.6); 
+            border-radius: 16px; 
+            font-weight: bold;
+            cursor: pointer; 
+            font-size: 18px; 
+            margin-top: 15px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 24px 0 rgba(0, 31, 77, 0.2), 
+                        inset 0 4px 4px 0 rgba(255, 255, 255, 0.5);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        /* EFECTO REFLEJO LÍQUIDO AL PASAR EL CURSOR / TOCAR */
+        .btn-interactivo::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+            transition: all 0.6s ease;
+        }
+
+        .btn-interactivo:hover::before {
+            left: 100%;
+        }
+
+        .btn-interactivo:hover {
+            transform: translateY(-3px);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.5));
+            box-shadow: 0 12px 32px 0 rgba(0, 51, 153, 0.3), 
+                        inset 0 6px 6px 0 rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .btn-interactivo:active {
+            transform: translateY(1px);
+            box-shadow: 0 4px 12px 0 rgba(0, 31, 77, 0.3);
+        }
+
+        #bloque-carreras {
+            display: none;
+            animation: desplazarAbajo 0.3s ease forwards;
+        }
+
+        .check-animado {
+            width: 70px; height: 70px; background: #28a745;
+            color: white; font-size: 40px; line-height: 70px;
+            border-radius: 50%; margin: 0 auto 15px;
+        }
+
+        @keyframes desplazarAbajo {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* AJUSTES PARA CELULARES CHICOS */
+        @media (max-height: 600px) {
+            .contenedor-v2 { padding: 20px; }
+            h2 { font-size: 1.2rem; }
+            input, select { padding: 12px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="pantalla-registro" class="pantalla activa">
+        <div class="logo-contenedor">
+            <img src="./logo.png" class="logo-universidad" alt="Logo UNSTA"> 
+        </div>
+        <div class="contenedor-v2">
+            <h2>Regístrese para ser atendido</h2>
+            <input type="number" id="dni" placeholder="Ingresá tu DNI" inputmode="numeric">
+            <input type="tel" id="cel" placeholder="Número de Celular" inputmode="tel">
+            <button class="btn-interactivo" onclick="navegar('pantalla-menu')">Siguiente</button>
+        </div>
+    </div>
+
+    <div id="pantalla-menu" class="pantalla">
+        <div class="logo-contenedor">
+            <img src="./logo.png" class="logo-universidad" alt="Logo UNSTA">
+        </div>
+        <div class="contenedor-v2" id="cuerpo-menu">
+            <h2>¿Qué información buscás?</h2>
+            <select id="opcion" onchange="controlarMenuCarreras()">
+                <option value="">-- Seleccionar --</option>
+                <option value="Carreras">Información de carreras 🎓</option>
+                <option value="Inscripciones">Inscripciones 📝</option>
+                <option value="Cursos">Información de cursos 💻</option>
+                <option value="General">Consultas generales ❓</option>
+                <option value="General">Alumnos (Documentación, Claves, Becas, etc.) ✏️</option>
+            </select>
+
+            <div id="bloque-carreras">
+                <select id="carrera-elegida">
+                    <option value="">-- Seleccioná la Carrera --</option>
+                    <option value="Abogacia">Abogacía</option>
+                    <option value="Procuracion">Procuración</option>
+                    <option value="Notariado">Notariado</option>
+                    <option value="Lic. En Ciencias Sociales">Lic. En Ciencias Sociales</option>
+                    <option value="Contador Publico">Contador Público</option>
+                    <option value="Lic. En Administracion de Empresas">Lic. En Administración de Empresas</option>
+                    <option value="Lic. En Recursos Humanos">Lic. En Recursos Humanos</option>
+                    <option value="Lic. En Marketing">Lic. En Marketing</option>
+                    <option value="Ingenieria Informatica">Ingeniería Informática</option>
+                    <option value="Ingenieria Industrial">Ingeniería Industrial</option>
+                    <option value="Higiene y Seguridad Laboral">Higiene y Seguridad Laboral</option>
+                    <option value="Tec. En Desarrollo y Calidad de Software">Tec. En Desarrollo y Calidad de Software</option>
+                    <option value="Lic. En Terapia Ocupacional">Lic. En Terapia Ocupacional</option>
+                    <option value="Lic en Psicologia">Lic. en Psicología</option>
+                    <option value="Lic en Nutricion">Lic. en Nutrición</option>
+                    <option value="Profesorado en Ingles">Profesorado en Inglés</option>
+                    <option value="Profesorados (Ciclos de Complementacion)">Profesorados (Ciclos de Complementación)</option>
+                </select>
+            </div>
+
+            <button class="btn-interactivo" onclick="finalizarRegistroV2()">Confirmar Consulta</button>
+        </div>
+    </div>
+
+    <script>
+        // PEGA TU URL DE GOOGLE APPS SCRIPT AQUÍ
+        const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbwSPSSaXtzUiLnCVyfLFOOBZBJISPoh8_FdxcEqcngxmsDwpiejEQg5vUCoqZcmEp6r/exec";
+
+        function navegar(id) {
+            document.querySelectorAll('.pantalla').forEach(p => p.classList.remove('activa'));
+            document.getElementById(id).classList.add('activa');
+        }
+
+        function controlarMenuCarreras() {
+            const opcion = document.getElementById('opcion').value;
+            const bloque = document.getElementById('bloque-carreras');
+            bloque.style.display = (opcion === 'Carreras') ? 'block' : 'none';
+        }
+
+        async function finalizarRegistroV2() {
+            const op = document.getElementById('opcion').value;
+            if(!op) return;
+
+            const cel = document.getElementById('cel').value;
+            const carrera = document.getElementById('carrera-elegida').value;
+
+            const datos = {
+                dni: document.getElementById('dni').value,
+                celular: cel,
+                opcion: op,
+                carrera: (op === 'Carreras') ? carrera : ""
+            };
+
+            // 1. CONFIRMACIÓN VISUAL INMEDIATA
+            const contenedor = document.getElementById('cuerpo-menu');
+            contenedor.innerHTML = `
+                <div class="check-animado">✓</div>
+                <h2 style="color: #28a745; margin-bottom: 10px;">¡Muchas Gracias!</h2>
+                <p style="color: #333;">Tu consulta ha sido registrada con éxito.</p>
+            `;
+
+            // 2. ENVÍO SEGURO EN SEGUNDO PLANO
+            fetch(URL_SCRIPT, { 
+                method: 'POST', 
+                mode: 'no-cors', 
+                body: JSON.stringify(datos) 
+            });
+
+            // 3. REINICIO DE TERMINAL AUTOMÁTICO
+            setTimeout(() => { location.reload(); }, 3000);
+        }
+    </script>
+</body>
+</html>
