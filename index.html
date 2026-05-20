@@ -207,11 +207,19 @@
             document.getElementById(id).classList.add('activa');
         }
 
-        function controlarMenuCarreras() {
+          function controlarMenuCarreras() {
             const opcion = document.getElementById('opcion').value;
             const bloque = document.getElementById('bloque-carreras');
-            bloque.style.display = (opcion === 'Carreras') ? 'block' : 'none';
+    
+        // Ahora se muestra si es 'Carreras' o si es 'Inscripciones'
+        if (opcion === 'Carreras' || opcion === 'Inscripciones') {
+            bloque.style.display = 'block';
+        } else {
+        bloque.style.display = 'none';
+        document.getElementById('carrera-elegida').value = ""; // Resetea la selección si elige otra cosa
+           }
         }
+
 
         async function finalizarRegistroV2() {
             const op = document.getElementById('opcion').value;
