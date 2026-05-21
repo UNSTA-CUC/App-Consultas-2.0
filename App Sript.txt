@@ -1,0 +1,118 @@
+function doPost(e) {
+  // REEMPLAZÁ CON EL ID DE TU HOJA DE CÁLCULO
+  var idHoja = "1X7wjx6moxxFC4Vw7SHUQaZUDpQ_J8OG4xjPWqndgsyE"; 
+  var ss = SpreadsheetApp.openById(idHoja);
+  
+  try {
+    var data = JSON.parse(e.postData.contents);
+    
+    // 1. OBTENER FECHA Y HORA ACTUAL (Formato Argentina)
+    var ahora = new Date();
+    var soloFecha = ahora.toLocaleDateString('es-AR'); 
+    var soloHora = ahora.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+    
+    var meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+    var nombreMesActivo = meses[ahora.getMonth()] + "_" + ahora.getFullYear();
+    
+    // 2. VERIFICACIÓN Y CREACIÓN DE HOJA MENSUAL AUTOMÁTICA
+    var sheet = ss.getSheetByName(nombreMesActivo);
+    if (!sheet) {
+      sheet = ss.insertSheet(nombreMesActivo, 0);
+      
+      // Inyecta la estructura de encabezados de la A a la O
+      sheet.appendRow([
+        "Fecha",                           // A
+        "Hora",                            // B
+        "Apellido y Nombre",               // C
+        "DNI",                             // D
+        "Celular",                         // E
+        "Consulta",                        // F
+        "Tipo de consulta",                // G
+        "Carrera Consultada",              // H
+        "Otras Carreras",                  // I
+        "Medio por el cual\nnos conoció",  // J
+        "Mail",                            // K
+        "Dominio",                         // L
+        "Fue atendido por",                // M
+        "Observaciones",                   // N
+        "Enviar Info 🚀"                   // O
+      ]);
+      
+      // CONFIGURACIÓN ESTÉTICA DEL ENCABEZADO
+      var rangoEncabezado = sheet.getRange("A1:O1");
+      rangoEncabezado.setFontWeight("bold")
+                     .setBackground("#5990fc")     
+                     .setFontColor("white")
+                     .setHorizontalAlignment("center") 
+                     .setVerticalAlignment("middle")
+                     .setWrap(true); 
+      
+      sheet.setRowHeight(1, 40);
+
+      // Configuración de anchos de columna fijos
+      var anchos = [100, 100, 210, 137, 100, 110, 175, 270, 160, 160, 130, 130, 125, 250, 140];
+      for (var i = 0; i < anchos.length; i++) {
+        sheet.setColumnWidth(i + 1, anchos[i]);
+      }
+
+      // --- VALIDACIONES Y MENÚS DESPLEGABLES AUTOMÁTICOS ---
+      var opcionesConsulta = ["Becas", "Formación Docente", "Eventos", "Cambio de Carrera", "Reincorporación", "Orientación Vocacional", "Documentación", "Contraseña", "Otras", "Cancelación de Matrícula"];
+      var reglaConsulta = SpreadsheetApp.newDataValidation().requireValueInList(opcionesConsulta).setAllowInvalid(false).build();
+      sheet.getRange("G2:G500").setDataValidation(reglaConsulta);
+      
+      var opcionesMedio = ["Redes Sociales", "Visita Escuela", "Publicidad en Radio", "Expo UNSTA", "Referido"];
+      var reglaMedio = SpreadsheetApp.newDataValidation().requireValueInList(opcionesMedio).setAllowInvalid(false).build();
+      sheet.getRange("J2:J500").setDataValidation(reglaMedio);
+      
+      var opcionesDominio = ["@gmail.com", "@outlook.com", "@hotmail.com.ar", "@hotmail.com", "@yahoo.com", "@icloud.com", "@live.com"];
+      var reglaDominio = SpreadsheetApp.newDataValidation().requireValueInList(opcionesDominio).setAllowInvalid(false).build();
+      sheet.getRange("L2:L500").setDataValidation(reglaDominio);
+      
+      var opcionesPersonal = ["Lau", "Maru", "Lucho", "Mai", "Sil"];
+      var reglaPersonal = SpreadsheetApp.newDataValidation().requireValueInList(opcionesPersonal).setAllowInvalid(false).build();
+      sheet.getRange("M2:M500").setDataValidation(reglaPersonal);
+    }
+    
+    // 3. CAPTURA SEGURO DE LA CARRERA CONSULTADA
+    var carreraRecibida = "";
+    if (data.opcion === "Carreras" || data.opcion === "Inscripciones") {
+      carreraRecibida = data.carrera || "";
+    }
+
+    // 4. INSERTAR LOS DATOS EN LA PLANILLA
+    sheet.appendRow([
+      soloFecha,          // A
+      soloHora,           // B
+      "",                 // C
+      data.dni,           // D
+      data.celular,       // E
+      data.opcion,        // F
+      "",                 // G
+      carreraRecibida,    // H
+      "",                 // I
+      "",                 // J
+      "",                 // K
+      "",                 // L
+      "",                 // M
+      ""                  // N
+    ]);
+    
+    // 5. ENLACE DE WHATSAPP SIN DEPENDENCIA CIRCULAR
+    var ultimaFila = sheet.getLastRow();
+    if (carreraRecibida !== "") {
+      var celdaO = sheet.getRange("O" + ultimaFila);
+      
+      // CORRECCIÓN: Acotamos el VLOOKUP estrictamente a las columnas A:B de la otra pestaña
+      celdaO.setFormula(`=IF(H${ultimaFila}=""; ""; HYPERLINK("https://web.whatsapp.com/send?phone=54" & E${ultimaFila} & "&text=" & ENCODEURL(VLOOKUP(H${ultimaFila}; Config_Mensajes!$A$1:$B$40; 2; FALSE)); "Enviar WhatsApp 📱"))`);
+      
+      // Estilo estético de botón azul institucional
+      celdaO.setFontColor("#003399").setFontWeight("bold").setHorizontalAlignment("center");
+    }
+    
+    return ContentService.createTextOutput("Éxito").setMimeType(ContentService.MimeType.TEXT);
+  } catch (err) {
+    return ContentService.createTextOutput("Error: " + err.message);
+  }
+}
+
+https://script.google.com/macros/s/AKfycbyeFfGIs_gx3Mr_uMqUvAvVcDVUgoi_qdtPuXfc753t8l8K4Hf1ewlJk7iDgskY_9kJZw/exec
