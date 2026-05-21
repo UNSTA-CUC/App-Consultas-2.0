@@ -174,23 +174,23 @@
             <div id="bloque-carreras">
                 <select id="carrera-elegida">
                     <option value="">-- Seleccioná la Carrera --</option>
-                    <option value="Abogacia">Abogacía</option>
-                    <option value="Procuracion">Procuración</option>
+                    <option value="Abogacía">Abogacía</option>
+                    <option value="Procuración">Procuración</option>
                     <option value="Notariado">Notariado</option>
-                    <option value="Lic. En Ciencias Sociales">Lic. En Ciencias Sociales</option>
-                    <option value="Contador Publico">Contador Público</option>
-                    <option value="Lic. En Administracion de Empresas">Lic. En Administración de Empresas</option>
-                    <option value="Lic. En Recursos Humanos">Lic. En Recursos Humanos</option>
-                    <option value="Lic. En Marketing">Lic. En Marketing</option>
-                    <option value="Ingenieria Informatica">Ingeniería Informática</option>
-                    <option value="Ingenieria Industrial">Ingeniería Industrial</option>
+                    <option value="Lic. en Ciencias Sociales">Lic. en Ciencias Sociales</option>
+                    <option value="Contador Público">Contador Público</option>
+                    <option value="Lic. en Administración de Empresas">Lic. en Administración de Empresas</option>
+                    <option value="Lic. en Recursos Humanos">Lic. en Recursos Humanos</option>
+                    <option value="Lic. en Marketing">Lic. en Marketing</option>
+                    <option value="Ingeniería Informática">Ingeniería Informática</option>
+                    <option value="Ingeniería Industrial">Ingeniería Industrial</option>
                     <option value="Higiene y Seguridad Laboral">Higiene y Seguridad Laboral</option>
-                    <option value="Tec. En Desarrollo y Calidad de Software">Tec. En Desarrollo y Calidad de Software</option>
-                    <option value="Lic. En Terapia Ocupacional">Lic. En Terapia Ocupacional</option>
-                    <option value="Lic en Psicologia">Lic. en Psicología</option>
-                    <option value="Lic en Nutricion">Lic. en Nutrición</option>
-                    <option value="Profesorado en Ingles">Profesorado en Inglés</option>
-                    <option value="Profesorados (Ciclos de Complementacion)">Profesorados (Ciclos de Complementación)</option>
+                    <option value="Tec. en Desarrollo y Calidad de Software">Tec. en Desarrollo y Calidad de Software</option>
+                    <option value="Lic. en Terapia Ocupacional">Lic. en Terapia Ocupacional</option>
+                    <option value="Lic en Psicología">Lic. en Psicología</option>
+                    <option value="Lic en Nutrición">Lic. en Nutrición</option>
+                    <option value="Profesorado en Inglés">Profesorado en Inglés</option>
+                    <option value="Profesorados (Ciclos de Complementación)">Profesorados (Ciclos de Complementación)</option>
                 </select>
             </div>
 
@@ -200,14 +200,14 @@
 
     <script>
         // PEGA TU URL DE GOOGLE APPS SCRIPT AQUÍ
-        const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbwSPSSaXtzUiLnCVyfLFOOBZBJISPoh8_FdxcEqcngxmsDwpiejEQg5vUCoqZcmEp6r/exec";
+        const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbyjnTqYCZO5TbR2-CPc1QBuWClazuhohBk8kgISEI9RSDoCe64jzR3QLIVPHu_7YY4y/exec";
 
         function navegar(id) {
             document.querySelectorAll('.pantalla').forEach(p => p.classList.remove('activa'));
             document.getElementById(id).classList.add('activa');
         }
 
-          function controlarMenuCarreras() {
+       function controlarMenuCarreras() {
             const opcion = document.getElementById('opcion').value;
             const bloque = document.getElementById('bloque-carreras');
     
@@ -220,7 +220,6 @@
            }
         }
 
-
         async function finalizarRegistroV2() {
             const op = document.getElementById('opcion').value;
             if(!op) return;
@@ -229,10 +228,11 @@
             const carrera = document.getElementById('carrera-elegida').value;
 
             const datos = {
-                dni: document.getElementById('dni').value,
-                celular: cel,
-                opcion: op,
-                carrera: (op === 'Carreras') ? carrera : ""
+            dni: document.getElementById('dni').value,
+            celular: cel,
+            opcion: op,
+            // CORRECCIÓN: Guarda la carrera si es 'Carreras' O si es 'Inscripciones'
+            carrera: (op === 'Carreras' || op === 'Inscripciones') ? carrera : ""
             };
 
             // 1. CONFIRMACIÓN VISUAL INMEDIATA
