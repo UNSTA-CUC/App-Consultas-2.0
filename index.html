@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Consultas CUC</title>
+    <title>UNSTA Terminal - Campus Concepción</title>
     <style>
         /* RESETEO BÁSICO */
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -20,34 +20,43 @@
             display: none; 
             min-height: 100vh; 
             width: 100%;
-            background-image: linear-gradient(rgba(0, 25, 61, 0.55), rgba(0, 10, 30, 0.75)), url('./fondo.jpg');
+            background-image: linear-gradient(rgba(0, 25, 61, 0.55), rgba(0, 10, 30, 0.75)), url('./FONDO_GENERAL.jpg');
             background-size: cover; 
             background-position: center;
             background-attachment: fixed;
-            padding: 20px 0;
+            padding: 10px 0; /* Reducido para ganar espacio vertical */
         }
 
-        /* Pantalla activa por defecto (Registro) */
-        .activa { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        /* AJUSTE CLAVE: Alineamos hacia arriba con flex-start y damos un margen superior */
+        .activa { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: flex-start; 
+            padding-top: 5vh; /* Levanta visualmente todo el bloque un 5% de la pantalla */
+        }
 
         /* CONTENEDOR DE LOGO SUPERIOR */
         .logo-contenedor {
-            width: 90%; max-width: 420px;
-            text-align: center; margin-bottom: 15px;
+            width: 90%; 
+            max-width: 420px;
+            text-align: center; 
+            margin-bottom: 10px; /* Reducido de 15px a 10px */
         }
         
         .logo-universidad {
-            max-width: 80%; height: auto;
+            max-width: 65%; /* Reducido sutilmente de 80% a 65% para ahorrar espacio alto */
+            height: auto;
             filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.5));
         }
 
-        /* CONTENEDOR DE TEXTO / FORMULARIO - EFECTO LIQUID GLASS */
+        /* CONTENEDOR DE TEXTO / FORMULARIO - EFECTO LIQUID GLASS OPTIMIZADO */
         .contenedor-v2 {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.45));
             border: 1px solid rgba(255, 255, 255, 0.4);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
-            padding: 30px; 
+            padding: 22px 30px; /* Reducido el padding vertical de 30px a 22px */
             border-radius: 24px; 
             text-align: center;
             width: 90%; 
@@ -56,12 +65,21 @@
                         inset 0 2px 4px rgba(255, 255, 255, 0.3);
         }
 
-        /* Color blanco/brillante para el título sobre el vidrio líquido */
-        h2 { color: #002266; margin-bottom: 20px; font-weight: 700; font-size: 1.5rem; text-shadow: 0 1px 1px rgba(255,255,255,0.5); }
+        /* TÍTULO DEL CUADRO */
+        h2 { 
+            color: #002266; 
+            margin-bottom: 12px; /* Reducido de 20px a 12px */
+            font-weight: 700; 
+            font-size: 1.4rem; /* Un pelín más compacto */
+            text-shadow: 0 1px 1px rgba(255,255,255,0.5); 
+        }
         
         input, select {
-            width: 100%; padding: 15px; margin: 10px 0;
-            font-size: 16px; border-radius: 12px;
+            width: 100%; 
+            padding: 12px; /* Reducido de 15px a 12px para achicar las cajas de texto */
+            margin: 8px 0; /* Reducido de 10px a 8px */
+            font-size: 16px; 
+            border-radius: 12px;
             border: 1px solid rgba(0, 51, 153, 0.2); 
             background: rgba(255, 255, 255, 0.9);
             outline: none;
@@ -75,15 +93,15 @@
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.3));
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            color: #003399; /* COLOR DE TEXTO AZUL */
-            padding: 16px; 
+            color: #003399; 
+            padding: 14px; /* Reducido de 16px a 14px */
             width: 100%;
             border: 1px solid rgba(255, 255, 255, 0.6); 
             border-radius: 16px; 
             font-weight: bold;
             cursor: pointer; 
             font-size: 18px; 
-            margin-top: 15px;
+            margin-top: 10px; /* Reducido de 15px a 10px */
             position: relative;
             overflow: hidden;
             box-shadow: 0 8px 24px 0 rgba(0, 31, 77, 0.2), 
@@ -91,7 +109,7 @@
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
-        /* EFECTO REFLEJO LÍQUIDO AL PASAR EL CURSOR / TOCAR */
+        /* EFECTO REFLEJO LÍQUIDO */
         .btn-interactivo::before {
             content: '';
             position: absolute;
@@ -101,12 +119,10 @@
             transition: all 0.6s ease;
         }
 
-        .btn-interactivo:hover::before {
-            left: 100%;
-        }
+        .btn-interactivo:hover::before { left: 100%; }
 
         .btn-interactivo:hover {
-            transform: translateY(-3px);
+            transform: translateY(-2px);
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.5));
             box-shadow: 0 12px 32px 0 rgba(0, 51, 153, 0.3), 
                         inset 0 6px 6px 0 rgba(255, 255, 255, 0.6);
@@ -134,11 +150,14 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* AJUSTES PARA CELULARES CHICOS */
-        @media (max-height: 600px) {
-            .contenedor-v2 { padding: 20px; }
-            h2 { font-size: 1.2rem; }
-            input, select { padding: 12px; }
+        /* MEDIDAS EXTRAS AUTOMÁTICAS SI LA PANTALLA ES MUY CHICA O ESTÁ APRETADA */
+        @media (max-height: 700px) {
+            .activa { padding-top: 2vh; }
+            .contenedor-v2 { padding: 15px 25px; }
+            h2 { font-size: 1.2rem; margin-bottom: 8px; }
+            input, select { padding: 10px; margin: 5px 0; }
+            .btn-interactivo { padding: 12px; margin-top: 5px; }
+            .logo-universidad { max-width: 50%; }
         }
     </style>
 </head>
@@ -146,7 +165,7 @@
 
     <div id="pantalla-registro" class="pantalla activa">
         <div class="logo-contenedor">
-            <img src="./logo.png" class="logo-universidad" alt="Logo UNSTA"> 
+            <img src="./BIENVENIDO_3.jpg" class="logo-universidad" alt="Logo UNSTA"> 
         </div>
         <div class="contenedor-v2">
             <h2>Regístrese para ser atendido</h2>
@@ -158,7 +177,7 @@
 
     <div id="pantalla-menu" class="pantalla">
         <div class="logo-contenedor">
-            <img src="./logo.png" class="logo-universidad" alt="Logo UNSTA">
+            <img src="./BIENVENIDO_3.jpg" class="logo-universidad" alt="Logo UNSTA">
         </div>
         <div class="contenedor-v2" id="cuerpo-menu">
             <h2>¿Qué información buscás?</h2>
@@ -168,29 +187,28 @@
                 <option value="Inscripciones">Inscripciones 📝</option>
                 <option value="Cursos">Información de cursos 💻</option>
                 <option value="General">Consultas generales ❓</option>
-                <option value="General">Alumnos (Documentación, Claves, Becas, etc.) ✏️</option>
             </select>
 
             <div id="bloque-carreras">
                 <select id="carrera-elegida">
                     <option value="">-- Seleccioná la Carrera --</option>
-                    <option value="Abogacía">Abogacía</option>
-                    <option value="Procuración">Procuración</option>
+                    <option value="Abogacia">Abogacía</option>
+                    <option value="Procuracion">Procuración</option>
                     <option value="Notariado">Notariado</option>
-                    <option value="Lic. en Ciencias Sociales">Lic. en Ciencias Sociales</option>
-                    <option value="Contador Público">Contador Público</option>
-                    <option value="Lic. en Administración de Empresas">Lic. en Administración de Empresas</option>
-                    <option value="Lic. en Recursos Humanos">Lic. en Recursos Humanos</option>
-                    <option value="Lic. en Marketing">Lic. en Marketing</option>
-                    <option value="Ingeniería Informática">Ingeniería Informática</option>
-                    <option value="Ingeniería Industrial">Ingeniería Industrial</option>
+                    <option value="Lic. En Ciencias Sociales">Lic. En Ciencias Sociales</option>
+                    <option value="Contador Publico">Contador Público</option>
+                    <option value="Lic. En Administracion de Empresas">Lic. En Administración de Empresas</option>
+                    <option value="Lic. En Recursos Humanos">Lic. En Recursos Humanos</option>
+                    <option value="Lic. En Marketing">Lic. En Marketing</option>
+                    <option value="Ingenieria Informatica">Engineering Informática</option>
+                    <option value="Ingenieria Industrial">Ingeniería Industrial</option>
                     <option value="Higiene y Seguridad Laboral">Higiene y Seguridad Laboral</option>
-                    <option value="Tec. en Desarrollo y Calidad de Software">Tec. en Desarrollo y Calidad de Software</option>
-                    <option value="Lic. en Terapia Ocupacional">Lic. en Terapia Ocupacional</option>
-                    <option value="Lic en Psicología">Lic. en Psicología</option>
-                    <option value="Lic en Nutrición">Lic. en Nutrición</option>
-                    <option value="Profesorado en Inglés">Profesorado en Inglés</option>
-                    <option value="Profesorados (Ciclos de Complementación)">Profesorados (Ciclos de Complementación)</option>
+                    <option value="Tec. En Desarrollo y Calidad de Software">Tec. En Desarrollo y Calidad de Software</option>
+                    <option value="Lic. En Terapia Ocupacional">Lic. En Terapia Ocupacional</option>
+                    <option value="Lic en Psicologia">Lic. en Psicología</option>
+                    <option value="Lic en Nutricion">Lic. en Nutrición</option>
+                    <option value="Profesorado en Ingles">Profesorado en Inglés</option>
+                    <option value="Profesorados (Ciclos de Complementacion)">Profesorados (Ciclos de Complementación)</option>
                 </select>
             </div>
 
@@ -199,7 +217,7 @@
     </div>
 
     <script>
-        // PEGA TU URL DE GOOGLE APPS SCRIPT AQUÍ
+        // TU URL DE GOOGLE APPS SCRIPT
         const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbyeFfGIs_gx3Mr_uMqUvAvVcDVUgoi_qdtPuXfc753t8l8K4Hf1ewlJk7iDgskY_9kJZw/exec";
 
         function navegar(id) {
@@ -207,17 +225,16 @@
             document.getElementById(id).classList.add('activa');
         }
 
-       function controlarMenuCarreras() {
+        function controlarMenuCarreras() {
             const opcion = document.getElementById('opcion').value;
             const bloque = document.getElementById('bloque-carreras');
-    
-        // Ahora se muestra si es 'Carreras' o si es 'Inscripciones'
-        if (opcion === 'Carreras' || opcion === 'Inscripciones') {
-            bloque.style.display = 'block';
-        } else {
-        bloque.style.display = 'none';
-        document.getElementById('carrera-elegida').value = ""; // Resetea la selección si elige otra cosa
-           }
+            
+            if (opcion === 'Carreras' || opcion === 'Inscripciones') {
+                bloque.style.display = 'block';
+            } else {
+                bloque.style.display = 'none';
+                document.getElementById('carrera-elegida').value = "";
+            }
         }
 
         async function finalizarRegistroV2() {
@@ -228,14 +245,12 @@
             const carrera = document.getElementById('carrera-elegida').value;
 
             const datos = {
-            dni: document.getElementById('dni').value,
-            celular: cel,
-            opcion: op,
-            // CORRECCIÓN: Guarda la carrera si es 'Carreras' O si es 'Inscripciones'
-            carrera: (op === 'Carreras' || op === 'Inscripciones') ? carrera : ""
+                dni: document.getElementById('dni').value,
+                celular: cel,
+                opcion: op,
+                carrera: (op === 'Carreras' || op === 'Inscripciones') ? carrera : ""
             };
 
-            // 1. CONFIRMACIÓN VISUAL INMEDIATA
             const contenedor = document.getElementById('cuerpo-menu');
             contenedor.innerHTML = `
                 <div class="check-animado">✓</div>
@@ -243,14 +258,12 @@
                 <p style="color: #333;">Tu consulta ha sido registrada con éxito.</p>
             `;
 
-            // 2. ENVÍO SEGURO EN SEGUNDO PLANO
             fetch(URL_SCRIPT, { 
                 method: 'POST', 
                 mode: 'no-cors', 
                 body: JSON.stringify(datos) 
             });
 
-            // 3. REINICIO DE TERMINAL AUTOMÁTICO
             setTimeout(() => { location.reload(); }, 3000);
         }
     </script>
