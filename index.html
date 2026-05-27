@@ -24,16 +24,16 @@
             background-size: cover; 
             background-position: center;
             background-attachment: fixed;
-            padding: 10px 0; /* Reducido para ganar espacio vertical */
+            padding: 10px 0;
         }
 
-        /* AJUSTE CLAVE: Alineamos hacia arriba con flex-start y damos un margen superior */
+        /* AJUSTE CLAVE */
         .activa { 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
             justify-content: flex-start; 
-            padding-top: 5vh; /* Levanta visualmente todo el bloque un 5% de la pantalla */
+            padding-top: 5vh; 
         }
 
         /* CONTENEDOR DE LOGO SUPERIOR */
@@ -41,11 +41,11 @@
             width: 90%; 
             max-width: 420px;
             text-align: center; 
-            margin-bottom: 10px; /* Reducido de 15px a 10px */
+            margin-bottom: 10px; 
         }
         
         .logo-universidad {
-            max-width: 65%; /* Reducido sutilmente de 80% a 65% para ahorrar espacio alto */
+            max-width: 65%; 
             height: auto;
             filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.5));
         }
@@ -56,7 +56,7 @@
             border: 1px solid rgba(255, 255, 255, 0.4);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
-            padding: 22px 30px; /* Reducido el padding vertical de 30px a 22px */
+            padding: 22px 30px; 
             border-radius: 24px; 
             text-align: center;
             width: 90%; 
@@ -68,16 +68,16 @@
         /* TÍTULO DEL CUADRO */
         h2 { 
             color: #002266; 
-            margin-bottom: 12px; /* Reducido de 20px a 12px */
+            margin-bottom: 12px; 
             font-weight: 700; 
-            font-size: 1.4rem; /* Un pelín más compacto */
+            font-size: 1.4rem; 
             text-shadow: 0 1px 1px rgba(255,255,255,0.5); 
         }
         
         input, select {
             width: 100%; 
-            padding: 12px; /* Reducido de 15px a 12px para achicar las cajas de texto */
-            margin: 8px 0; /* Reducido de 10px a 8px */
+            padding: 12px; 
+            margin: 8px 0; 
             font-size: 16px; 
             border-radius: 12px;
             border: 1px solid rgba(0, 51, 153, 0.2); 
@@ -94,19 +94,31 @@
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             color: #003399; 
-            padding: 14px; /* Reducido de 16px a 14px */
+            padding: 14px; 
             width: 100%;
             border: 1px solid rgba(255, 255, 255, 0.6); 
             border-radius: 16px; 
             font-weight: bold;
             cursor: pointer; 
             font-size: 18px; 
-            margin-top: 10px; /* Reducido de 15px a 10px */
+            margin-top: 10px; 
             position: relative;
             overflow: hidden;
             box-shadow: 0 8px 24px 0 rgba(0, 31, 77, 0.2), 
                         inset 0 4px 4px 0 rgba(255, 255, 255, 0.5);
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        /* MEJORA 1: Botón volver atrás simple */
+        .btn-secundario {
+            background: transparent;
+            border: none;
+            color: #002266;
+            text-decoration: underline;
+            font-size: 14px;
+            margin-top: 15px;
+            cursor: pointer;
+            display: inline-block;
         }
 
         /* EFECTO REFLEJO LÍQUIDO */
@@ -150,7 +162,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* MEDIDAS EXTRAS AUTOMÁTICAS SI LA PANTALLA ES MUY CHICA O ESTÁ APRETADA */
         @media (max-height: 700px) {
             .activa { padding-top: 2vh; }
             .contenedor-v2 { padding: 15px 25px; }
@@ -171,7 +182,7 @@
             <h2>Regístrese para ser atendido</h2>
             <input type="number" id="dni" placeholder="Ingresá tu DNI" inputmode="numeric">
             <input type="tel" id="cel" placeholder="Número de Celular" inputmode="tel">
-            <button class="btn-interactivo" onclick="navegar('pantalla-menu')">Siguiente</button>
+            <button class="btn-interactivo" onclick="validarRegistro()">Siguiente</button>
         </div>
     </div>
 
@@ -200,7 +211,7 @@
                     <option value="Lic. En Administracion de Empresas">Lic. En Administración de Empresas</option>
                     <option value="Lic. En Recursos Humanos">Lic. En Recursos Humanos</option>
                     <option value="Lic. En Marketing">Lic. En Marketing</option>
-                    <option value="Ingenieria Informatica">Engineering Informática</option>
+                    <option value="Ingenieria Informatica">Ingeniería Informática</option>
                     <option value="Ingenieria Industrial">Ingeniería Industrial</option>
                     <option value="Higiene y Seguridad Laboral">Higiene y Seguridad Laboral</option>
                     <option value="Tec. En Desarrollo y Calidad de Software">Tec. En Desarrollo y Calidad de Software</option>
@@ -213,16 +224,28 @@
             </div>
 
             <button class="btn-interactivo" onclick="finalizarRegistroV2()">Confirmar Consulta</button>
+            <button class="btn-secundario" onclick="navegar('pantalla-registro')">Volver atrás</button>
         </div>
     </div>
 
     <script>
-        // TU URL DE GOOGLE APPS SCRIPT
         const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbyeFfGIs_gx3Mr_uMqUvAvVcDVUgoi_qdtPuXfc753t8l8K4Hf1ewlJk7iDgskY_9kJZw/exec";
 
         function navegar(id) {
             document.querySelectorAll('.pantalla').forEach(p => p.classList.remove('activa'));
             document.getElementById(id).classList.add('activa');
+        }
+
+        // MEJORA 1: Evita avanzar si los campos de registro inicial están vacíos
+        function validarRegistro() {
+            const dni = document.getElementById('dni').value.trim();
+            const cel = document.getElementById('cel').value.trim();
+
+            if (!dni || !cel) {
+                alert("Por favor, ingresá tu DNI y celular para continuar.");
+                return;
+            }
+            navegar('pantalla-menu');
         }
 
         function controlarMenuCarreras() {
@@ -239,10 +262,20 @@
 
         async function finalizarRegistroV2() {
             const op = document.getElementById('opcion').value;
-            if(!op) return;
+            // MEJORA 1: Validación de que haya seleccionado una opción principal
+            if(!op) {
+                alert("Por favor, seleccioná una opción de consulta.");
+                return;
+            }
+
+            const carrera = document.getElementById('carrera-elegida').value;
+            // MEJORA 1: Validación si elige carrera/inscripción y deja la carrera vacía
+            if ((op === 'Carreras' || op === 'Inscripciones') && !carrera) {
+                alert("Por favor, seleccioná una carrera de la lista.");
+                return;
+            }
 
             const cel = document.getElementById('cel').value;
-            const carrera = document.getElementById('carrera-elegida').value;
 
             const datos = {
                 dni: document.getElementById('dni').value,
@@ -252,10 +285,11 @@
             };
 
             const contenedor = document.getElementById('cuerpo-menu');
+            // MEJORA 3: Contraste de color ajustado a #112244 para mejor lectura en el glassmorphism
             contenedor.innerHTML = `
                 <div class="check-animado">✓</div>
                 <h2 style="color: #28a745; margin-bottom: 10px;">¡Muchas Gracias!</h2>
-                <p style="color: #333;">Tu consulta ha sido registrada con éxito.</p>
+                <p style="color: #112244; font-weight: 600;">Tu consulta ha sido registrada con éxito.</p>
             `;
 
             fetch(URL_SCRIPT, { 
